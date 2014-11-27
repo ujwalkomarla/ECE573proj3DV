@@ -16,31 +16,33 @@ int main(int argc,char **argv){
 	int iNoOfLinks;
 	if(0 == fscanf(pTopologyFile, "%d", &iNoOfNodes)) DieWithError("File Read: Topology file, Number of nodes");
 	iNoOfLinks = CountLinesInFile(pTopologyFile);
-	#ifdef DEBUG
+	#ifdef DEBUGOLD
 		printf("Number of links : %d\r\n",iNoOfLinks);
 	#endif
-	int *links = malloc(sizeof(int) * iNoOfLinks * 3); //3 -> Node1 Node2 LinkCost
+	int *links = malloc(sizeof(int) * iNoOfLinks * 2); //2 -> Node1 Node2
+	float *linkCost = malloc(sizeof(float) * iNoOfLinks);
 	for(i=0; i<iNoOfLinks; i++ ){
-		fscanf(pTopologyFile, "%d %d %d", (links + i*3 + 0), (links + i*3 + 1), (links + i*3 + 2));
-	#ifdef DEBUG
-		printf("Iteration %d : %d %d %d\r\n",i, *(links + i*3 + 0), *(links + i*3 + 1), *(links + i*3 + 2));
+		fscanf(pTopologyFile, "%d %d %f", (links + i*2 + 0), (links + i*2 + 1), (linkCost + i));
+	#ifdef DEBUGOLD
+		printf("Iteration %d : %d %d %f\r\n",i, *(links + i*2 + 0), *(links + i*2 + 1), *(linkCost + i));
 	#endif
 	}
-	int *overallMatrix = malloc(sizeof(int) * iNoOfNodes * iNoOfNodes);
-	memset(overallMatrix, -1, sizeof(int) * iNoOfNodes * iNoOfNodes);// -1 not a neighbour
+	float *overallMatrix = malloc(sizeof(float) * iNoOfNodes * iNoOfNodes);
+	//memset(overallMatrix, -1, sizeof(int) * iNoOfNodes * iNoOfNodes);// -1 not a neighbour
+	for(i=0; i<iNoOfNodes*iNoOfNodes;i++) *(overallMatrix+i)=-FLT_MAX;//-99.9;
 	for(i=0; i<iNoOfLinks; i++){
-		*(overallMatrix + (*(links + i*3 + 0)-1)*iNoOfNodes + *(links + i*3 + 1)-1) = *(links + i*3 + 2);//Neighbours
-		*(overallMatrix + (*(links + i*3 + 1)-1)*iNoOfNodes + *(links + i*3 + 0)-1) = *(links + i*3 + 2);//Neighbours
+		*(overallMatrix + (*(links + i*2 + 0)-1)*iNoOfNodes + *(links + i*2 + 1)-1) = *(linkCost + i);//Neighbours
+		*(overallMatrix + (*(links + i*2 + 1)-1)*iNoOfNodes + *(links + i*2 + 0)-1) = *(linkCost + i);//Neighbours
 	}
-	for(i=0;i<iNoOfNodes;i++) *(overallMatrix + i*iNoOfNodes + i) = 0;
-	#ifdef DEBUG
-	printf("   ");
-	for(i=1;i<iNoOfNodes+1;i++) printf("%3d ", i);
+	for(i=0;i<iNoOfNodes;i++) *(overallMatrix + i*iNoOfNodes + i) = 0.0;
+	#ifdef DEBUGOLD
+	printf("  ");
+	for(i=1;i<iNoOfNodes+1;i++) printf("%5d ", i);
 	printf("\r\n");
 	for(i=0;i<iNoOfNodes;i++){
 		printf("%3d", i+1);	
 		for(j=0;j<iNoOfNodes;j++)
-			printf("%3d ", *(overallMatrix + i*iNoOfNodes + j));
+			printf("%5.1f ", *(overallMatrix + i*iNoOfNodes + j));
 		printf("\r\n");	
 	}
 	#endif
