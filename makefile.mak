@@ -1,9 +1,9 @@
 CC=gcc
 CFLAGS=-c -Wall -g 
-LDFLAGS= -pthread
-SOURCES=
+LDFLAGS=-pthread
+SOURCES=distVecAlgo.c customDefinitions.c
 OBJECTS=$(SOURCES:.c=.o)
-EXECUTABLE=
+EXECUTABLE=distance_vector
 
 
 all: $(SOURCES) $(EXECUTABLE)
