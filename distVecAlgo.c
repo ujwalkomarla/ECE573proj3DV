@@ -137,12 +137,18 @@ for(x=0;x<iNoOfNodes;x++){
 	#endif	
 }	
 	//exit(1);
+	for(i=0;i<iNoOfNodes;i++){
+	NodeInfo.Update[iInitNode]=0;
+	}
 	NodeInfo.Update[iInitNode]=1;
 	int RUN = 1;
+	int tCount =0;
 	while(RUN){
+	tCount++;
 		for(i=0;i<iNoOfNodes;i++){//'i' -> The node which has sent an update message?
 			
 			if(1==NodeInfo.Update[i]){
+			
 				NodeInfo.Update[i]=0;
 				for(j=0;j<iNoOfNodes;j++){//'j' -> Check if 'j' has 'i' as it's neighbour
 					if(i==j) continue;
@@ -225,6 +231,7 @@ for(x=0;x<iNoOfNodes;x++){
 for(t=0;t<NodeInfo.neighbours[iNode1-1];t++){
 	if((iNode1-1)==*(NodeInfo.localNodeMatrix[iNode1-1] + t*(iNoOfNodes+1))) {SELF = t; /*printf("SELF %d\r\n",t);*/break;}
 }	
+printf("Loop Count: %d\r\n",tCount);
 printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNodeMatrix[iNode1-1]+SELF*(iNoOfNodes+1)+iNode2));
 
 
@@ -232,7 +239,6 @@ printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNod
 	
 	
 	
-	#ifdef DEBUG
 	for(x=0;x<iNoOfNodes;x++){
 		if(x==(iNode1-1) || x==(iNode2-1)){
 			for(i=0;i<NodeInfo.neighbours[x];i++){
@@ -244,7 +250,6 @@ printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNod
 		}
 	}
 	
-	#endif	
 
 
 return 0;
