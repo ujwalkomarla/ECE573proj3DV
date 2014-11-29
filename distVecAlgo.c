@@ -8,7 +8,7 @@ int main(int argc,char **argv){
 		DieWithError(str);
 	}
 	FILE *pTopologyFile = fopen(argv[2],"r");
-	//int iInitNode = atoi(argv[1]);
+	int iInitNode = atoi(argv[1]);
 	int iNode1 = atoi(argv[3]);
 	int iNode2 = atoi(argv[4]);
 	int i,j,k,t;
@@ -108,7 +108,7 @@ for(x=0;x<iNoOfNodes;x++){
 					*(NodeInfo.UpdateVector[x] + j-1) = *(NodeInfo.localNodeMatrix[x] + tneighbours*(iNoOfNodes+1) + j);
 					
 				}
-				NodeInfo.Update[i]=1;
+				//NodeInfo.Update[i]=1;
 			}else{
 				for(j=1;j<iNoOfNodes+1;j++){
 					*(NodeInfo.localNodeMatrix[x] + tneighbours*(iNoOfNodes+1) + j) = INFINITY;
@@ -137,6 +137,7 @@ for(x=0;x<iNoOfNodes;x++){
 	#endif	
 }	
 	//exit(1);
+	NodeInfo.Update[iInitNode]=1;
 	int RUN = 1;
 	while(RUN){
 		for(i=0;i<iNoOfNodes;i++){//'i' -> The node which has sent an update message?
