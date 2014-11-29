@@ -201,19 +201,50 @@ for(x=0;x<iNoOfNodes;x++){
 		
 	}
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		//-1 Human to Code indexing
+for(t=0;t<NodeInfo.neighbours[iNode1-1];t++){
+	if((iNode1-1)==*(NodeInfo.localNodeMatrix[iNode1-1] + t*(iNoOfNodes+1))) {SELF = t; /*printf("SELF %d\r\n",t);*/break;}
+}	
+printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNodeMatrix[iNode1-1]+SELF*(iNoOfNodes+1)+iNode2));
+
+
+
+	
+	
+	
 	#ifdef DEBUG
 	for(x=0;x<iNoOfNodes;x++){
-		for(i=0;i<NodeInfo.neighbours[x];i++){
-			printf("\r\nNODE %3.0f:",*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)));
-			for(j=1;j<iNoOfNodes+1;j++)
-				printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),*(NodeInfo.localNextNodeMatrix[x]+j-1));
+		if(x==(iNode1-1) || x==(iNode2-1)){
+			for(i=0;i<NodeInfo.neighbours[x];i++){
+				printf("\r\nNODE %3.0f:",*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)) + 1);//+1 -> Code indexing to human
+				for(j=1;j<iNoOfNodes+1;j++)
+					printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),*(NodeInfo.localNextNodeMatrix[x]+j-1));
+			}
+			printf("\r\n");
 		}
-		printf("\r\n");
 	}
 	
 	#endif	
-	
-	
 
 
 return 0;
