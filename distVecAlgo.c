@@ -8,7 +8,7 @@ int main(int argc,char **argv){
 		DieWithError(str);
 	}
 	FILE *pTopologyFile = fopen(argv[2],"r");
-	int iInitNode = atoi(argv[1]);
+	//int iInitNode = atoi(argv[1]);
 	int iNode1 = atoi(argv[3]);
 	int iNode2 = atoi(argv[4]);
 	int i,j,k,t;
@@ -82,8 +82,6 @@ struct tNodeInfo{
 	int Update[iNoOfNodes];
 	float *UpdateVector[iNoOfNodes];
 }NodeInfo;
-int tUpdate[iNoOfNodes];
-for(i=0;i<iNoOfNodes;i++) tUpdate[i]=0;
 for(x=0;x<iNoOfNodes;x++){
 	//x=7
 	//Count number of neighbours for NODE x
@@ -101,7 +99,7 @@ for(x=0;x<iNoOfNodes;x++){
 	for(i=0;i<iNoOfNodes;i++){
 		if( INFINITY > *(overallMatrix + x*iNoOfNodes + i)){//Neighbour
 			*(NodeInfo.localNodeMatrix[x] + tneighbours*(iNoOfNodes+1)) = i;//i is the neighbour/self node id
-			//*(NodeInfo.localNextNodeMatrix[x] + i) = x;//SELF<-WRONG, Next HOP is correct
+			*(NodeInfo.localNextNodeMatrix[x] + i) = i;//SELF<-WRONG, Next HOP is expected
 			if(i==x){ //SELF
 				for(j=1;j<iNoOfNodes+1;j++){
 					*(NodeInfo.localNodeMatrix[x] + tneighbours*(iNoOfNodes+1) + j) = *(overallMatrix + i*iNoOfNodes + (j-1));
@@ -207,7 +205,7 @@ for(x=0;x<iNoOfNodes;x++){
 		for(i=0;i<NodeInfo.neighbours[x];i++){
 			printf("\r\nNODE %3.0f:",*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)));
 			for(j=1;j<iNoOfNodes+1;j++)
-				printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),*(NodeInfo.localNextNodeMatrix[x]+j));
+				printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),*(NodeInfo.localNextNodeMatrix[x]+j-1));
 		}
 		printf("\r\n");
 	}
