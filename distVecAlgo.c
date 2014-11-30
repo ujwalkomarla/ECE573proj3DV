@@ -8,7 +8,7 @@ int main(int argc,char **argv){
 		DieWithError(str);
 	}
 	FILE *pTopologyFile = fopen(argv[2],"r");
-	int iInitNode = atoi(argv[1]);
+	int iInitNode = atoi(argv[1])-1;
 	int iNode1 = atoi(argv[3]);
 	int iNode2 = atoi(argv[4]);
 	int i,j,k,t;
@@ -138,16 +138,18 @@ for(x=0;x<iNoOfNodes;x++){
 }	
 	//exit(1);
 	for(i=0;i<iNoOfNodes;i++){
-	NodeInfo.Update[iInitNode]=0;
+	NodeInfo.Update[i]=0;
 	}
 	NodeInfo.Update[iInitNode]=1;
 	int RUN = 1;
+	int RUN1;
 	int tCount =0;
-	while(RUN){
+	while(RUN){//||RUN1){
 	tCount++;
+	RUN1=0;
 		for(i=0;i<iNoOfNodes;i++){//'i' -> The node which has sent an update message?
 			
-			if(1==NodeInfo.Update[i]){
+			if(1==NodeInfo.Update[i]){//||RUN1){
 			
 				NodeInfo.Update[i]=0;
 				for(j=0;j<iNoOfNodes;j++){//'j' -> Check if 'j' has 'i' as it's neighbour
@@ -156,7 +158,13 @@ for(x=0;x<iNoOfNodes;x++){
 						if(i==*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1))){
 							
 							for(t=1;t<iNoOfNodes+1;t++){// 't' -> Link cost
-								*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1) + t) = *(NodeInfo.UpdateVector[i] + t - 1);
+								
+								if(*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1) + t) != *(NodeInfo.UpdateVector[i] + t - 1)){
+									//RUN1 =1;
+									NodeInfo.Update[j]=1;
+									*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1) + t) = *(NodeInfo.UpdateVector[i] + t - 1);
+								}
+								
 							}
 							for(t=0;t<NodeInfo.neighbours[j];t++){
 								if(j==*(NodeInfo.localNodeMatrix[j] + t*(iNoOfNodes+1))) {SELF = t; /*printf("SELF %d\r\n",t);*/break;}
@@ -242,9 +250,11 @@ printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNod
 	for(x=0;x<iNoOfNodes;x++){
 		if(x==(iNode1-1) || x==(iNode2-1)){
 			for(i=0;i<NodeInfo.neighbours[x];i++){
-				printf("\r\nNODE %3.0f:",*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)) + 1);//+1 -> Code indexing to human
-				for(j=1;j<iNoOfNodes+1;j++)
-					printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),*(NodeInfo.localNextNodeMatrix[x]+j-1));
+				if(x==*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1))){
+					printf("\r\nNODE %3.0f:",*(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)) + 1);//+1 -> Code indexing to human
+					for(j=1;j<iNoOfNodes+1;j++)
+						printf("%5.1f, %2.1f ", *(NodeInfo.localNodeMatrix[x]+i*(iNoOfNodes+1)+j),(*(NodeInfo.localNextNodeMatrix[x]+j-1)+    1)); //+1 -> Code indexing to human
+					}
 			}
 			printf("\r\n");
 		}
