@@ -137,8 +137,10 @@ for(x=0;x<iNoOfNodes;x++){
 	#endif	
 }	
 	//exit(1);
+	int *iCount =malloc(sizeof(int)*iNoOfNodes);
 	for(i=0;i<iNoOfNodes;i++){
 	NodeInfo.Update[i]=0;
+	iCount[i]=0;
 	}
 	NodeInfo.Update[iInitNode]=1;
 	int RUN = 1;
@@ -153,7 +155,9 @@ for(x=0;x<iNoOfNodes;x++){
 			
 				NodeInfo.Update[i]=0;
 				for(j=0;j<iNoOfNodes;j++){//'j' -> Check if 'j' has 'i' as it's neighbour
+					
 					if(i==j) continue;
+					iCount[i]++;
 					for(k=0;k<NodeInfo.neighbours[j];k++){
 						if(i==*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1))){
 							
@@ -259,6 +263,11 @@ printf("Cost from Node %d to Node %d : %f\r\n",iNode1,iNode2,*(NodeInfo.localNod
 			printf("\r\n");
 		}
 	}
+	printf("Loop Counts\r\n");
+	for(x=0;x<iNoOfNodes;x++){
+	printf("%d ", iCount[x]);
+	}
+	printf("\r\n");
 	
 
 
