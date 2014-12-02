@@ -144,20 +144,20 @@ for(x=0;x<iNoOfNodes;x++){
 	}
 	NodeInfo.Update[iInitNode]=1;
 	int RUN = 1;
-	int RUN1;
+	//int RUN1;
 	int tCount =0;
 	while(RUN){//||RUN1){
 	tCount++;
-	RUN1=0;
+	//RUN1=0;
 		for(i=0;i<iNoOfNodes;i++){//'i' -> The node which has sent an update message?
 			
 			if(1==NodeInfo.Update[i]){//||RUN1){
-			
+				iCount[i]++;//Count IF and ONLY IF I receive a message from my neighbour
 				NodeInfo.Update[i]=0;
 				for(j=0;j<iNoOfNodes;j++){//'j' -> Check if 'j' has 'i' as it's neighbour
 					
 					if(i==j) continue;
-					iCount[i]++;
+					
 					for(k=0;k<NodeInfo.neighbours[j];k++){
 						if(i==*(NodeInfo.localNodeMatrix[j] + k*(iNoOfNodes+1))){
 							
@@ -184,8 +184,9 @@ for(x=0;x<iNoOfNodes;x++){
 								}
 							}
 							if(1==NodeInfo.Update[j]){
-								for(t=0;t<iNoOfNodes;t++)
+								for(t=0;t<iNoOfNodes;t++){
 									*(NodeInfo.UpdateVector[j] + t)=*(NodeInfo.localNodeMatrix[j]+SELF*(iNoOfNodes+1)+t+1);
+									}
 							}
 							break;
 						}
